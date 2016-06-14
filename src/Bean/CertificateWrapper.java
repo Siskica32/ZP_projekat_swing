@@ -2,13 +2,16 @@ package Bean;
 
 import java.math.BigInteger;
 import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
 public class CertificateWrapper {
     
     private KeyPair keyPair;
-    private X509Certificate certificate;
+    private Certificate certificate;
     
     private int keySize;
     private Date startDate; 
@@ -27,6 +30,7 @@ public class CertificateWrapper {
     private int keyUsage;
     private Boolean keyUsageIsCritical;
     private String path;
+    private boolean isSign;
     
     public CertificateWrapper(){
         
@@ -43,12 +47,20 @@ public class CertificateWrapper {
     public void setKeyPair(KeyPair keyPair) {
         this.keyPair = keyPair;
     }
+    
+    public PublicKey getPublicKey(){
+        return keyPair.getPublic() ;
+    }
+    
+    public PrivateKey getPrivateKey(){
+        return keyPair.getPrivate();
+    }
 
-    public X509Certificate getCertificate() {
+    public Certificate getCertificate() {
         return certificate;
     }
 
-    public void setCertificate(X509Certificate certificate) {
+    public void setCertificate(Certificate certificate) {
         this.certificate = certificate;
     }
 
@@ -180,12 +192,12 @@ public class CertificateWrapper {
         this.keyUsageIsCritical = keyUsageIsCritical;
     }
 
-    public String getPath() {
-        return path;
+    public boolean isIsSign() {
+        return isSign;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setIsSign(boolean isSign) {
+        this.isSign = isSign;
     }
- 
+
 }

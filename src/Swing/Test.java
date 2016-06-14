@@ -1,7 +1,9 @@
 
 package Swing;
 
+import Bean.CertificateWrapper;
 import Bean.User;
+import Security.FileUtil;
 import Security.Generator;
 import java.math.BigInteger;
 import java.security.KeyPair;
@@ -14,6 +16,41 @@ public class Test {
     //Ovo je test
     public static void main(String args[]){
         
+        CertificateWrapper cw = new CertificateWrapper();
+        Generator gen = new Generator();
+        FileUtil fu = new FileUtil();
+        cw.setKeyPair(gen.generateKeyPair(1024));
+        cw.setCn("mitar");
+        cw.setSerialNumber(BigInteger.ZERO);
+        cw.setExpiryDate(new Date(2020,2,2));
+        cw.setStartDate(new Date());
+        cw.setL("asd");
+        cw.setO("asdf");
+        cw.setOu("af");
+        cw.setSt("asfd");
+        cw.setC("f");
+        cw.setIsSign(true);
+        
+        Certificate c = gen.generateCertificate(cw);
+        cw.setCertificate(c);
+        
+        //fu.exportKeyStore("C://Users//Admin//Desktop//s.bin", "pass", cw);
+       
+        
+        fu.importKeyStore("C://Users//Admin//Desktop//s.bin", "pass");
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         /**
          * 
          * KOD ZA GENERISANJE NOVOG PARA KLJUCEVA (I SERTIFIKATA)
@@ -21,11 +58,11 @@ public class Test {
          * 
          */
         
-        Generator gen = new Generator();
+        //Generator gen = new Generator();
         
         Calendar cal = Calendar.getInstance();
         cal.set(2016, 9, 25);
- 
+ /*
         gen.setKeySize(1024);
         gen.setStartDate(new Date());
         gen.setExpiryDate(new Date(cal.getTimeInMillis()));
@@ -61,6 +98,8 @@ public class Test {
         
         //Izvoz keyStore-a
         user.exportKeyStore("C://Users//Admin//Desktop//sertifikat.bin", "pass");
+
+*/
     }
      
 }
