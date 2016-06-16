@@ -28,9 +28,15 @@ import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.jce.X509KeyUsage;
+import org.bouncycastle.operator.BufferingContentSigner;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
+import org.bouncycastle.pkcs.bc.BcPKCS10CertificationRequestBuilder;
+import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.bouncycastle.util.encoders.Base64Encoder;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 
@@ -71,7 +77,9 @@ public class Generator {
             
             //Dodavanje basic constraint polja (ako je zadato)
             if(cw.getBasicConstraint() != null){
-                BasicConstraints bs = new BasicConstraints(cw.getBasicConstraint());
+                BasicConstraints bs;
+                if(cw.getBasicConstraint() == true) bs= new BasicConstraints(cw.getBasicConstraintPath());
+                else bs= new BasicConstraints(false);
                 Extension bsExtension = new Extension(Extension.basicConstraints, cw.getBasicConstraintIsCritical(), bs.getEncoded());           
                 builder.addExtension(bsExtension);
             }
@@ -91,7 +99,12 @@ public class Generator {
             }
             
             //Potpis sertifikata
-            ContentSigner sigGen = new JcaContentSignerBuilder("SHA1WithRSA").build(cw.getPrivateKey());
+            //ContentSigner sigGen = new JcaContentSignerBuilder("SHA1WithRSA").build(cw.getPrivateKey());
+            PKCS10CertificationRequestBuilder p10Builder = new JcaPKCS10CertificationRequestBuilder(nameBuilder.build(), cw.getPublicKey());
+            JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder("SHA1withRSA");
+            ContentSigner signer = csBuilder.build(cw.getPrivateKey());
+            PKCS10CertificationRequest csr = p10Builder.build(signer);
+            ContentSigner sigGen = new BufferingContentSigner(signer);
             
             //Nastavak generisanja sertifikata
             CertificateFactory factory = CertificateFactory.getInstance("X.509");

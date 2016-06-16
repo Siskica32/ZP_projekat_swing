@@ -33,7 +33,7 @@ public class Test {
         
         Certificate c = gen.generateCertificate(cw);
         cw.setCertificate(c);
-        
+        //fu.exportCertificate(c, "C://Users//Admin//Desktop//cert.cer");
         //fu.exportKeyStore("C://Users//Admin//Desktop//s.bin", "pass", cw);
        
         
